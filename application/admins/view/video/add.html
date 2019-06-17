@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加影片</title>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/plugins/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/plugins/layui/layui.js"></script>
+    <style type="text/css">
+        body{padding: 10px;}
+    </style>
+</head>
+<body>
+<form class="layui-form">
+    <input type="hidden" name='id' value="{$data.item.id}">
+    <div class="layui-form-item">
+        <lable class="layui-form-label">
+            影片名称
+        </lable>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="title" value="{$data.item.title}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <lable class="layui-form-label">
+            频道
+        </lable>
+        <div class="layui-input-inline">
+            <select name="channel_id" id="channel_id">
+                <option value="0">请选择</option>
+                {volist name="data.channel" id="vo_channel"}
+                     <option value="{$vo_channel.id}"  <?php if($data['item']['channel_id']==$vo_channel['id']){echo 'selected';} ?>>{$vo_channel.title}</option>
+                {/volist}
+            </select>
+        </div>
+        <lable class="layui-form-label">
+            资费
+        </lable>
+        <div class="layui-input-inline">
+            <select name="charge_id" id="charge_id">
+                <option value="0">请选择</option>
+                {volist name="data.charge" id="vo_charge"}
+                <option value="{$vo_charge.id}" <?php if($data['item']['charge_id']==$vo_charge['id']){echo 'selected';} ?>>{$vo_charge.title}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <lable class="layui-form-label">
+            地区
+        </lable>
+        <div class="layui-input-inline">
+            <select name="area_id" id="area_id">
+                <option value="0">请选择</option>
+                {volist name="data.area" id="vo_area"}
+                <option value="{$vo_area.id}" <?php if($data['item']['area_id']==$vo_area['id']){echo 'selected';} ?>>{$vo_area.title}</option>
+                {/volist}
+            </select>
+        </div>
+        <lable class="layui-form-label">
+            类型
+        </lable>
+        <div class="layui-input-inline">
+            <select name="vtype_id" id="vtype_id">
+                <option value="0">请选择</option>
+                {volist name="data.vtype" id="vo_vtype"}
+                <option value="{$vo_vtype.id}" <?php if($data['item']['vtype_id']==$vo_vtype['id']){echo 'selected';} ?>>{$vo_vtype.title}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <lable class="layui-form-label">
+            规格
+        </lable>
+        <div class="layui-input-inline">
+            <select name="vnorm_id" id="vnorm_id">
+                <option value="0">请选择</option>
+                {volist name="data.vnorm" id="vo_vnorm"}
+                <option value="{$vo_vnorm.id}"  <?php if($data['item']['vnorm_id']==$vo_vnorm['id']){echo 'selected';} ?>>{$vo_vnorm.title}</option>
+                {/volist}
+            </select>
+        </div>
+        <lable class="layui-form-label">
+            年代
+        </lable>
+        <div class="layui-input-inline">
+            <select name="vdecade_id" id="vdecade_id">
+                <option value="0">请选择</option>
+                {volist name="data.vdecade" id="vo_vdecade"}
+                <option value="{$vo_vdecade.id}" <?php if($data['item']['vdecade_id']==$vo_vdecade['id']){echo 'selected';} ?>>{$vo_vdecade.title}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <lable class="layui-form-label">
+            &nbsp;
+        </lable>
+        <div class="layui-input-inline">
+            <button type="button" class="layui-btn" id="upload_img">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+        <lable class="layui-form-label">
+            图片缩略图
+        </lable>
+        <div class="layui-input-inline">
+            <img id="pre_img" alt="" height="40px" <?php if($data['item']['img']){echo 'src="'.$data['item']['img'].'"';}?>>
+            <input type="hidden" name="img" value="{$data.item.img}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <lable class="layui-form-label">影片地址</lable>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="url" value="{$data.item.url}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <lable class="layui-form-label">关键字</lable>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="keywords" value="{$data.item.keywords}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <lable class="layui-form-label">描述</lable>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="desc" value="{$data.item.desc}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <lable class="layui-form-label">状态</lable>
+        <div class="layui-input-block">
+            <input type="checkbox" layui-skin="primary" name="status" title="发布" <?php if($data['item']['status']){echo 'checked';}?> value="1">
+        </div>
+    </div>
+</form>
+<div class="layui-from-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" onclick="save()">保存</button>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['form', 'layer', 'upload'],function(){
+        $ = layui.jquery;
+        var form = layui.form;
+        layer = layui.layer;
+
+        var upload = layui.upload;
+        var uploadInst = upload.render({
+            //绑定元素
+            elem: '#upload_img',
+            //上传接口
+            url : '/admins.php/admins/Video/upload_img',
+            //上传完毕回调
+            done : function(res){
+                $('#pre_img').attr('src', res.msg);
+                $('input[name="img"]').val(res.msg);
+                //console.log(res);
+            },
+            //请求异常回调
+            error : function(){
+
+            }
+        });
+    });
+
+    /**
+     * 保存影片操作
+     */
+    function save(){
+        var title = $.trim($('input[name="title"]').val());
+        var url = $.trim($('input[name = "url"]').val());
+        if(title==''){
+            layer.msg('请输入影片名称',{'icon':2, 'anim':6});
+            return;
+        }
+        if(url==''){
+            layer.msg('请输入影片地址',{'icon':2, 'anim':6});
+            return;
+        }
+        $.post('/admins.php/admins/Video/save',$('form').serialize(),function(res){
+            if(res.code > 0){
+                layer.msg(res.msg,{'icon':2, 'anim':2});
+            }else{
+                layer.msg(res.msg,{'icon':1});
+                setTimeout(function(){parent.window.location.reload();},1000);
+            }
+        },'json');
+
+    }
+</script>
+</html>

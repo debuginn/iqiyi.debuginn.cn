@@ -1,0 +1,128 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:83:"/www/wwwroot/iqiyi.debuginn.cn/public/../application/admins/view/account/login.html";i:1558342469;}*/ ?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>爱奇艺后台登录</title>
+    <link rel="stylesheet" type="text/css" href="/static/plugins/layui/css/layui.css">
+    <script type="text/javascript" src="/static/plugins/layui/layui.js"></script>
+    <style type="text/css">
+        body{
+            background-color: #1E9FFF;
+        }
+        .box{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 500px;
+            margin-left: -250px;
+            margin-top: -200px;
+        }
+        .box-box{
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 5px 5px 20px #444444;
+        }
+        .layui-form-item h2{
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="box-box">
+            <div class="layui-form">
+                <div class="layui-form-item">
+                    <h2>后台管理系统</h2>
+                </div>
+                <hr>
+
+                <div class="layui-form-item">
+                    <lable class="layui-form-label">用户名</lable>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="username" name="username">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <lable class="layui-form-label">密&nbsp;&nbsp;&nbsp;&nbsp;码</lable>
+                    <div class="layui-input-block">
+                        <input type="password" class="layui-input" id="password" name="password">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <lable class="layui-form-label">验证码</lable>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="verifycode" name="verifycode">
+                    </div>
+                    <img src="<?php echo captcha_src(); ?>" alt="" onclick="reloadImg()" id="img">
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" onclick="dologin()">登录</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input class="layui-btn layui-btn-danger" type="reset" value="重置"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--进行Ajax数据处理及传输验证-->
+    <script type="text/javascript">
+        var $;
+        var layer;
+        layui.use(['layer'], function(){
+            $ = layui.jquery;
+            layer = layui.layer;
+
+            //用户名获得焦点
+            $('#username').focus();
+            //用户点击回车提交信息
+            $('input').keydown(function(e){
+                if(e.keyCode == 13){
+                    dologin();
+                }
+            });
+        });
+        //重新生成验证码
+        function reloadImg(){
+            $('#img').attr('src','<?php echo captcha_src(); ?>?rand='+Math.random());
+        }
+        //登陆验证
+        function dologin(){
+            //接收页面输入的用户名、密码、验证码信息
+            var username = $.trim($('#username').val());
+            var password = $.trim($('#password').val());
+            var verifycode = $.trim($('#verifycode').val());
+
+            //判断验证输入是否完善
+            if(username==''){
+                layer.alert('请输入用户名',{icon:2});
+                return;
+            }
+            if(password==''){
+                layer.alert('请输入密码',{icon:2});
+                return;
+            }
+            if(verifycode==''){
+                layer.alert('请输入验证码',{icon:2});
+                return;
+            }
+            //把数据以json方式传给dologin方法处理
+            $.post('/admins.php/admins/Account/dologin',{'username':username, 'password':password, 'verifycode':verifycode},function (res){
+                if(res.code>0){
+                    reloadImg();
+                    layer.alert(res.msg,{icon:2});
+                }else{
+                    layer.alert(res.msg);
+                    setTimeout(function(){window.location.href = '/admins.php/admins/Home/index'},1000)
+                }
+            },'json');
+        }
+    </script>
+</body>
+</html>

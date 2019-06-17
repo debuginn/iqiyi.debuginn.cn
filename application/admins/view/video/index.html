@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>影片列表</title>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/plugins/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/plugins/layui/layui.js"></script>
+    <style type="text/css">
+        body{padding: 10px;}
+        .header span{background: #009688;margin-left: 30px;padding:10px;color: #ffffff;}
+        .header div{border-bottom: solid 2px #009688; margin-top: 8px;}
+        .warningFont{color: #ff0203;}
+        .header button{float: right;margin-top:-5px;margin-right: 10px;}
+    </style>
+</head>
+<body>
+<div class="header">
+    <span>影片列表</span>
+    <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="add()">添加</button>
+    <div></div>
+</div>
+<div class="layui-form-item" style="margin-top: 10px">
+    <div class="layui-input-inline">
+        <input type="text" class="layui-input" name="wd" id="wd" value="{$data.wd}" placeholder="请输入影片标题">
+    </div>
+    <button class="layui-btn layui-btn-primary" onclick="searchs();"><i class="layui-icon">&#xe615;</i>搜索</button>
+</div>
+<table class="layui-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>频道</th>
+        <th>资费</th>
+        <th>地区</th>
+        <th>类型</th>
+        <th>规格</th>
+        <th>年代</th>
+        <th>影片名称</th>
+        <th>点击量</th>
+        <th>评分</th>
+        <th>状态</th>
+        <th>添加时间</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name="data.data.lists" id='vo'}
+    <tr>
+        <td>{$vo.id}</td>
+        <td>{:isset($data['labels'][$vo['channel_id']]) ? $data['labels'][$vo['channel_id']]['title'] : ''}</td>
+        <td>{:isset($data['labels'][$vo['charge_id']]) ? $data['labels'][$vo['charge_id']]['title'] : ''}</td>
+        <td>{:isset($data['labels'][$vo['area_id']]) ? $data['labels'][$vo['area_id']]['title'] : ''}</td>
+        <td>{:isset($data['labels'][$vo['vtype_id']]) ? $data['labels'][$vo['vtype_id']]['title'] : ''}</td>
+        <td>{:isset($data['labels'][$vo['vnorm_id']]) ? $data['labels'][$vo['vnorm_id']]['title'] : ''}</td>
+        <td>{:isset($data['labels'][$vo['vdecade_id']]) ? $data['labels'][$vo['vdecade_id']]['title'] : ''}</td>
+        <td>{$vo.title}</td>
+        <td>{$vo.pv}</td>
+        <td>{$vo.score}</td>
+        <td>{$vo.status == 0?'<span class="warningFont">下线</span>':'正常'}</td>
+        <td>{:date('Y-m-d H:i:s',$vo.add_time)}</td>
+
+        <td>
+            <button class="layui-btn layui-btn-xs" onclick="add({$vo.id})">编辑</button>&nbsp;
+            <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="del({$vo.id})">删除</button>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+<div id="pages"></div>
+
+<script type="text/javascript">
+    //引入layui的方法
+    layui.use(['layer', 'laypage'], function () {
+        layer = layui.layer;
+        $ = layui.jquery;
+        laypage = layui.laypage;
+
+        laypage.render({
+            elem: 'pages',
+            count:{$data.data.total},
+            limit:{$data.pageSize},
+            curr: {$data.page},
+            jump: function(obj, first){
+                if(!first){
+                    searchs(obj.curr);
+                    //window.location.href="?page="+obj.curr;
+                }
+            }
+        });
+
+    });
+    //添加编辑/更新弹出页
+    function add(id){
+        layer.open({
+            type: 2,
+            title: id>0 ? '编辑影片' : '添加影片',
+            shade: 0.3,
+            area: ['800px', '600px'],
+            content: '/admins.php/admins/video/add?id='+id
+        });
+    }
+    //搜索功能
+    function searchs(curpage) {
+        var wd = $.trim($('#wd').val());
+        var url = "/admins.php/admins/video/index?page="+curpage;
+        if(wd){
+            url += '&wd='+wd;
+        }
+        window.location.href = url;
+        //window.location.href = '/admins.php/admins/video/index?wd?='+wd;
+    }
+    //删除
+    function del(id){
+        layer.confirm('确定要删除么？', {
+            icon:3,
+            btn: ['确定','取消']
+        }, function(){
+            $.post('/admins.php/admins/video/delete',{'id':id},function(res){
+                if(res.code>0){
+                    layer.alert(res.msg,{icon:2})
+                }else{
+                    layer.msg(res.msg);
+                    setTimeout(function(){window.location.reload();},1000)
+                }
+            },'json');
+        });
+    }
+</script>
+</body>
+</html>

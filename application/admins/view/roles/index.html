@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色管理</title>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/plugins/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/plugins/layui/layui.js"></script>
+    <style type="text/css">
+        body{padding: 10px;}
+        .header span{background: #009688;margin-left: 30px;padding:10px;color: #ffffff;}
+        .header div{border-bottom: solid 2px #009688; margin-top: 8px;}
+        .header button{float:right;}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span>角色管理</span>
+        <button class="layui-btn layui-btn-xs" onclick="add()">添加</button>
+        <div></div>
+    </div>
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>角色名称</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        {volist name="data.roles" id="vo"}
+            <tr>
+                <td>{$vo.gid}</td>
+                <td>{$vo.title}</td>
+                <td>
+                    <button class="layui-btn layui-btn-warm layui-btn-xs" onclick="add({$vo.gid})">编辑</button>
+                    <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="del({$vo.gid})">删除</button>
+                </td>
+            </tr>
+        {/volist}
+        </tbody>
+    </table>
+
+<script type="text/javascript">
+    layui.use(['layer'],function () {
+        $ = layui.jquery;
+        layer = layui.layer;
+    });
+    //添加或修改
+    function add(gid){
+        layer.open({
+            type: 2,
+            title: gid>0?'编辑角色':'添加角色',
+            shade: 0.3,
+            area: ['450px', '420px'],
+            content: '/admins.php/admins/Roles/add?gid='+gid
+        });
+    }
+    //删除用户
+    function del(gid){
+        layer.confirm('确定要删除么？',{
+            icon:3,
+            btn:['确定','取消']
+        },function(){
+           $.post('/admins.php/admins/roles/deletes',{'gid':gid},function(res){
+               if(res.code>0){
+                   layer.alert(res.msg, {icon:2});
+               }else{
+                   layer.msg(res.msg);
+                   setTimeout(function () {
+                       window.location.reload();
+                   },1000)
+               }
+           })
+        });
+    }
+</script>
+</body>
+</html>
