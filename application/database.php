@@ -15,11 +15,11 @@ return [
     // 服务器地址
     'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => 'iqiy_debuginn_cn',
+    'database'        => 'iqiyi_debuginn_cn',
     // 用户名
-    'username'        => 'iqiy_debuginn_cn',
+    'username'        => 'root',
     // 密码
-    'password'        => '46WRG2LEjdGsaPEM',
+    'password'        => 'mxh980726',
     // 端口
     'hostport'        => '',
     // 连接dsn
