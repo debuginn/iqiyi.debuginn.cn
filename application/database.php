@@ -17,9 +17,9 @@ return [
     // 数据库名
     'database'        => 'iqiyi_debuginn_cn',
     // 用户名
-    'username'        => 'root',
+    'username'        => '',
     // 密码
-    'password'        => 'mxh980726',
+    'password'        => '',
     // 端口
     'hostport'        => '',
     // 连接dsn
