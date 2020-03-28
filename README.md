@@ -10,6 +10,7 @@
 - 服务器：Nginx/1.10.3 (Ubuntu)
 - 后端框架：ThinkPHP 5.0版本
 - 前端框架：Bootstrap 4.1.1
+- 组建：Layer，LayUI
 
 ## 项目功能实现
 1、管理员管理
